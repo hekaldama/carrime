@@ -16,6 +16,8 @@ map <silent> ,V :source ~/.vimrc:filetype detect:exe ":echo 'vimrc reloaded'
 map ,v ,t ~/.vimrc_
 map :wq :w
 vmap [% [%m'gv``
+nmap <silent> \aocom :AlignPush:AlignCtrl g /[*/]\acom:AlignPop
+nmap <silent> \t@ :AlignCtrl mIp1P1=l @:'a,.Align
 nmap \sv <Plug>SVNVimDiff
 nmap \su <Plug>SVNUpdate
 nmap \sr <Plug>SVNResolved
@@ -73,9 +75,7 @@ vmap <silent> \T, :<BS><BS><BS>ma'>\T,
 vmap <silent> \T| :<BS><BS><BS>ma'>\T|
 map <silent> \tdW@ :AlignCtrl v ^\s*/[/*]:AlignCtrl mWp1P1=l @:'a,.Align
 map <silent> \tW@ :AlignCtrl mWp1P1=l @:'a,.Align
-nmap <silent> \t@ :AlignCtrl mIp1P1=l @:'a,.Align
 omap <silent> \t@ :AlignCtrl mIp1P1=l @:'a,.Align
-nmap <silent> \aocom :AlignPush:AlignCtrl g /[*/]\acom:AlignPop
 omap <silent> \aocom :AlignPush:AlignCtrl g /[*/]\acom:AlignPop
 nnoremap \kw :1,$s/ \+$//
 map \t :FuzzyFinderTextMate
@@ -123,6 +123,8 @@ set background=dark
 set completeopt=menu
 set cpoptions=ABceFsv$
 set display=lastline
+set equalprg=perltidy\ -q
+set errorformat=%D(in\\\ %f),%A\\\ %\\\\+%\\\\d%\\\\+)\\\ Failure:,%C%.%#\\\ [%f:%l]:,%A\\\ %\\\\+%\\\\d%\\\\+)\\\ Error:,%CActionView::TemplateError:\\\ compile\\\ error,%C%.%#/lib/gems/%\\\\d.%\\\\d/gems/%.%#,%C%.%#/vendor/rails/%.%#,%C%.%#(eval)%.%#,%Z%f:%l:\\\ syntax\\\ error\\\\,\\\ %m,%Z%f:%l:\\\ %m,%Z\\\ %#,%Z%p^,%C\\\ %\\\\+On\\\ line\\\ #%l\\\ of\\\ %f,%C\\\ \\\ \\\ \\\ %f:%l:%.%#,%Ctest_%.%#:,%CActionView::TemplateError:\\\ %f:%l:in\\\ `%.%#':\\\ %m,%CActionView::TemplateError:\\\ You\\\ have\\\ a\\\ %m!,%CNoMethodError:\\\ You\\\ have\\\ a\\\ %m!,%CActionView::TemplateError:\\\ %m,%CThe\\\ error\\\ occured\\\ while\\\ %m,%C%m,ActionView::TemplateError\\\ (%m)\\\ on\\\ line\\\ #%l\\\ of\\\ %f:,%AActionView::TemplateError\\\ (compile\\\ error,%.%#/rake_test_loader.rb:%\\\\d%\\\\+:in\\\ `load':\\\ %f:%l:\\\ %m,%-G%.%#/lib/gems/%\\\\d.%\\\\d/gems/%.%#,%-G%.%#/vendor/rails/%.%#,%f:%l:\\\ %m,%-G%.%#
 set expandtab
 set fileencodings=ucs-bom,utf-8,default,latin1
 set formatoptions=tcqln
@@ -149,11 +151,17 @@ if expand('%') == '' && !&modified && line('$') <= 1 && getline(1) == ''
   let s:wipebuf = bufnr('%')
 endif
 set shortmess=aoO
-badd +2 lib/carrime/carrier.rb
-badd +2 lib/carrime/tracking_number.rb
+badd +8 lib/carrime/carrier.rb
+badd +3 lib/carrime/tracking_number.rb
 badd +24 ~/.vimrc
-badd +0 ~/programming/ruby/isgd/isgd.rb
-badd +0 lib/carrime.rb
+badd +5 ~/programming/ruby/isgd/isgd.rb
+badd +3 lib/carrime.rb
+badd +0 ~/s3/public/scripts/carrier.php
+badd +0 ~/s3/app/models/product/r
+badd +51 ~/s3/app/models/product.rb
+badd +11 ~/s3/app/models/ftper.rb
+badd +0 app/models/channel/ftp_submitter.rb
+badd +0 ~/s3/app/models/channel/ftp_submitter.rb
 args lib/carrime/carrier.rb lib/carrime/tracking_number.rb
 edit lib/carrime/carrier.rb
 set splitbelow splitright
@@ -254,12 +262,325 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+let s:l = 12 - ((11 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-1
-normal! 02l
+12
+normal! 04l
+tabedit ~/s3/public/scripts/carrier.php
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+edit ~/s3/public/scripts/carrier.php
+vnoremap <buffer> <silent> 	 :call HTMLnextInsertPoint('n')
+nnoremap <buffer> <silent> 	 :call HTMLnextInsertPoint('n')
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
+nnoremap <buffer> <silent> ;& s=HTMLencodeString(@")
+nnoremap <buffer> <silent> ;tA :call HTMLgenerateTable()
+nnoremap <buffer> <silent> ;4 :call append(0, '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"') | call append(1, ' "http://www.w3.org/TR/html4/loose.dtd">')
+nnoremap <buffer> <silent> ;html :if (HTMLtemplate()) | startinsert | endif
+nnoremap <buffer> <silent> ;mi :call MangleImageTag()
+nnoremap <buffer> <silent> ;; ;
+vnoremap <buffer> <silent> ;; ;
+map <buffer> \rm :Rake
+map <buffer> \rr :R
+map <buffer> \ra :A
+map <buffer> \rf <Plug>RailsFind
+nmap <buffer> ]f <Plug>RailsRelated
+nmap <buffer> gf <Plug>RailsFind
+map <buffer> <silent> <Plug>RailsMagicM :echoerr "Obsolete: Use <Plug>RailsRelated instead"
+map <buffer> <silent> <Plug>RailsTabFind :RTfind
+map <buffer> <silent> <Plug>RailsVSplitFind :RVfind
+map <buffer> <silent> <Plug>RailsSplitFind :RSfind
+map <buffer> <silent> <Plug>RailsFind :REfind
+map <buffer> <silent> <Plug>RailsRelated :R
+map <buffer> <silent> <Plug>RailsAlternate :A
+inoremap <buffer> 	 =CodeComplete()=SwitchRegion()
+inoremap <buffer> <silent> &3. &hellip;
+inoremap <buffer> <silent> &-- &mdash;
+inoremap <buffer> <silent> &m- &mdash;
+inoremap <buffer> <silent> &n- &ndash;
+inoremap <buffer> <silent> &34 &frac34;
+inoremap <buffer> <silent> &12 &frac12;
+inoremap <buffer> <silent> &14 &frac14;
+inoremap <buffer> <silent> &. &middot;
+inoremap <buffer> <silent> &pa &para;
+inoremap <buffer> <silent> &mu &micro;
+inoremap <buffer> <silent> &de &deg;
+inoremap <buffer> <silent> &? &iquest;
+inoremap <buffer> <silent> &! &iexcl;
+inoremap <buffer> <silent> &o/ &oslash;
+inoremap <buffer> <silent> &/ &divide;
+inoremap <buffer> <silent> &" &uml;
+inoremap <buffer> <silent> &2> &raquo;
+inoremap <buffer> <silent> &2< &laquo;
+inoremap <buffer> <silent> &y" &yuml;
+inoremap <buffer> <silent> &y' &yacute;
+inoremap <buffer> <silent> &u" &uuml;
+inoremap <buffer> <silent> &u^ &ucirc;
+inoremap <buffer> <silent> &u' &uacute;
+inoremap <buffer> <silent> &u` &ugrave;
+inoremap <buffer> <silent> &x &times;
+inoremap <buffer> <silent> &o" &ouml;
+inoremap <buffer> <silent> &o~ &otilde;
+inoremap <buffer> <silent> &o^ &ocirc;
+inoremap <buffer> <silent> &o' &oacute;
+inoremap <buffer> <silent> &o` &ograve;
+inoremap <buffer> <silent> &n~ &ntilde;
+inoremap <buffer> <silent> &i" &iuml;
+inoremap <buffer> <silent> &i^ &icirc;
+inoremap <buffer> <silent> &i' &iacute;
+inoremap <buffer> <silent> &i` &igrave;
+inoremap <buffer> <silent> &e" &euml;
+inoremap <buffer> <silent> &e^ &ecirc;
+inoremap <buffer> <silent> &e' &eacute;
+inoremap <buffer> <silent> &e` &egrave;
+inoremap <buffer> <silent> &c, &ccedil;
+inoremap <buffer> <silent> &ae &aelig;
+inoremap <buffer> <silent> &ao &aring;
+inoremap <buffer> <silent> &a" &auml;
+inoremap <buffer> <silent> &a~ &atilde;
+inoremap <buffer> <silent> &a^ &acirc;
+inoremap <buffer> <silent> &a' &aacute;
+inoremap <buffer> <silent> &a` &agrave;
+inoremap <buffer> <silent> &Y' &Yacute;
+inoremap <buffer> <silent> &U" &Uuml;
+inoremap <buffer> <silent> &U^ &Ucirc;
+inoremap <buffer> <silent> &U' &Uacute;
+inoremap <buffer> <silent> &U` &Ugrave;
+inoremap <buffer> <silent> &O/ &Oslash;
+inoremap <buffer> <silent> &O" &Ouml;
+inoremap <buffer> <silent> &O~ &Otilde;
+inoremap <buffer> <silent> &O^ &Ocirc;
+inoremap <buffer> <silent> &O' &Oacute;
+inoremap <buffer> <silent> &O` &Ograve;
+inoremap <buffer> <silent> &N~ &Ntilde;
+inoremap <buffer> <silent> &I" &Iuml;
+inoremap <buffer> <silent> &I^ &Icirc;
+inoremap <buffer> <silent> &I' &Iacute;
+inoremap <buffer> <silent> &I` &Igrave;
+inoremap <buffer> <silent> &E" &Euml;
+inoremap <buffer> <silent> &E^ &Ecirc;
+inoremap <buffer> <silent> &E' &Eacute;
+inoremap <buffer> <silent> &E` &Egrave;
+inoremap <buffer> <silent> &C, &Ccedil;
+inoremap <buffer> <silent> &AE &AElig;
+inoremap <buffer> <silent> &Ao &Aring;
+inoremap <buffer> <silent> &A" &Auml;
+inoremap <buffer> <silent> &A~ &Atilde;
+inoremap <buffer> <silent> &A^ &Acirc;
+inoremap <buffer> <silent> &A' &Aacute;
+inoremap <buffer> <silent> &A` &Agrave;
+inoremap <buffer> <silent> &c| &cent;
+inoremap <buffer> <silent> &Y= &yen;
+inoremap <buffer> <silent> &# &pound;
+inoremap <buffer> <silent> &> &gt;
+inoremap <buffer> <silent> &< &lt;
+inoremap <buffer> <silent> &' &quot;
+inoremap <buffer> <silent> &tm &trade;
+inoremap <buffer> <silent> &rO &reg;
+inoremap <buffer> <silent> &cO &copy;
+inoremap <buffer> <silent> ;la <label for=""></label>F"
+inoremap <buffer> <silent> ;re <input type="reset" value="Reset">
+inoremap <buffer> <silent> ;su <input type="submit" value="Submit">
+inoremap <buffer> <silent> ;tx <textarea name="" rows="10" cols="50"></textarea>k0f"li
+inoremap <buffer> <silent> ;og <optgroup label=""></optgroup>k0f"li
+inoremap <buffer> <silent> ;op <option>
+inoremap <buffer> <silent> ;ms <select name="" multiple></select>O
+inoremap <buffer> <silent> ;se <select name=""></select>O
+inoremap <buffer> <silent> ;fi <input type="file" name="" value="" size=20>3F"i
+inoremap <buffer> <silent> ;te <input type="text" name="" value="" size=20>3F"i
+inoremap <buffer> <silent> ;pa <input type="password" name="" size=20>F"i
+inoremap <buffer> <silent> ;hi <input type="hidden" name="" value="">3F"i
+inoremap <buffer> <silent> ;ra <input type="radio" name="" value="">3F"i
+inoremap <buffer> <silent> ;ch <input type="checkbox" name="" value="">3F"i
+inoremap <buffer> <silent> ;bu <input type="button" name="" value="">3F"i
+inoremap <buffer> <silent> ;fm <form action=""></form>k0f"li
+inoremap <buffer> <silent> ;if <iframe src=""></iframe>Bblli
+inoremap <buffer> <silent> ;nf <noframes></noframes>O
+inoremap <buffer> <silent> ;fr <frame src="">F"i
+inoremap <buffer> <silent> ;fs <frameset rows="" cols=""></frameset>BBhhi
+inoremap <buffer> <silent> ;th <th></th>bhhi
+inoremap <buffer> <silent> ;td <td></td>O
+inoremap <buffer> <silent> ;tr <tr></tr>O
+inoremap <buffer> <silent> ;ta <table></table>O
+inoremap <buffer> <silent> ;ca <caption></caption>bhhi
+inoremap <buffer> <silent> ;ob <object data="" width="" height=""></object>k0f"li
+inoremap <buffer> <silent> ;eb <embed src="" width="" height=""><noembed></noembed>k0f"li
+inoremap <buffer> <silent> ;js <script type="text/javascript" language="javascript"><!--// --></script>kO
+inoremap <buffer> <silent> ;va <var></var>bhhi
+inoremap <buffer> <silent> ;ul <ul></ul>O
+inoremap <buffer> <silent> ;tt <tt></tt>bhhi
+inoremap <buffer> <silent> ;ti <title></title>bhhi
+inoremap <buffer> <silent> ;sp <sup></sup>bhhi
+inoremap <buffer> <silent> ;sb <sub></sub>bhhi
+inoremap <buffer> <silent> ;ls <link rel="stylesheet" type="text/css" href="">F"i
+inoremap <buffer> <silent> ;cs <style type="text/css"><!----></style>kO
+inoremap <buffer> <silent> ;sm <small></small>bhhi
+inoremap <buffer> <silent> ;sa <samp></samp>bhhi
+inoremap <buffer> <silent> ;sk <strike></strike>bhhi
+inoremap <buffer> <silent> ;qu <q></q>hhhi
+inoremap <buffer> <silent> ;pr <pre></pre>O
+inoremap <buffer> <silent> ;/p </p><p>
+inoremap <buffer> <silent> ;pp <p></p>O
+inoremap <buffer> <silent> ;ol <ol></ol>O
+inoremap <buffer> <silent> ;me <meta name="" content="">F"i
+inoremap <buffer> <silent> ;lh <lh></lh>bhhi
+inoremap <buffer> <silent> ;lk <link href="">F"i
+inoremap <buffer> <silent> ;li <li></li>bhhi
+inoremap <buffer> <silent> ;kb <kbd></kbd>bhhi
+inoremap <buffer> <silent> ;ii <isindex>
+inoremap <buffer> <silent> ;in <ins></ins>bhhi
+inoremap <buffer> <silent> ;im <img src="" alt="">3F"i
+inoremap <buffer> <silent> ;ht <html></html>O
+inoremap <buffer> <silent> ;Hr <hr width="75%">
+inoremap <buffer> <silent> ;hr <hr>
+inoremap <buffer> <silent> ;he <head></head>O
+inoremap <buffer> <silent> ;H6 <h6 align="center"></h6>bhhi
+inoremap <buffer> <silent> ;H5 <h5 align="center"></h5>bhhi
+inoremap <buffer> <silent> ;H4 <h4 align="center"></h4>bhhi
+inoremap <buffer> <silent> ;H3 <h3 align="center"></h3>bhhi
+inoremap <buffer> <silent> ;H2 <h2 align="center"></h2>bhhi
+inoremap <buffer> <silent> ;H1 <h1 align="center"></h1>bhhi
+inoremap <buffer> <silent> ;h6 <h6></h6>bhhi
+inoremap <buffer> <silent> ;h5 <h5></h5>bhhi
+inoremap <buffer> <silent> ;h4 <h4></h4>bhhi
+inoremap <buffer> <silent> ;h3 <h3></h3>bhhi
+inoremap <buffer> <silent> ;h2 <h2></h2>bhhi
+inoremap <buffer> <silent> ;h1 <h1></h1>bhhi
+inoremap <buffer> <silent> ;fc <font color=""></font>F"i
+inoremap <buffer> <silent> ;fo <font size=""></font>F"i
+inoremap <buffer> <silent> ;em <em></em>bhhi
+inoremap <buffer> <silent> ;sn <span></span>bhhi
+inoremap <buffer> <silent> ;dv <div></div>O
+inoremap <buffer> <silent> ;df <dfn></dfn>bhhi
+inoremap <buffer> <silent> ;de <del></del>bhhi
+inoremap <buffer> <silent> ;dd <dd>
+inoremap <buffer> <silent> ;dt <dt>
+inoremap <buffer> <silent> ;dl <dl></dl>O
+inoremap <buffer> <silent> ;co <code></code>bhhi
+inoremap <buffer> <silent> ;ci <cite></cite>bhhi
+inoremap <buffer> <silent> ;ce <center></center>bhhi
+inoremap <buffer> <silent> ;br <br>
+inoremap <buffer> <silent> ;bd <body></body>O
+inoremap <buffer> <silent> ;bl <blockquote></blockquote>O
+inoremap <buffer> <silent> ;bi <big></big>bhhi
+inoremap <buffer> <silent> ;bh <base href="">F"i
+inoremap <buffer> <silent> ;ad <address></address>bhhi
+inoremap <buffer> <silent> ;ac <acronym title=""></acronym>F"i
+inoremap <buffer> <silent> ;ab <abbr title=""></abbr>F"i
+inoremap <buffer> <silent> ;an <a name=""></a>F"i
+inoremap <buffer> <silent> ;at <a href="" target=""></a>3F"i
+inoremap <buffer> <silent> ;ah <a href=""></a>F"i
+inoremap <buffer> <silent> ;ct <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+inoremap <buffer> <silent> ;mi :call MangleImageTag()
+inoremap <buffer> <silent> ;	 	
+inoremap <buffer> <silent> ;; ;
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal noautoindent
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal comments=s1:/*,mb:*,ex:*/,://,:#
+setlocal commentstring=/*%s*/
+setlocal complete=.,w,b,u,t,i
+setlocal completefunc=
+setlocal nocopyindent
+setlocal nocursorcolumn
+setlocal nocursorline
+setlocal define=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'php'
+setlocal filetype=php
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=<SNR>29_MyNewFoldText()
+setlocal foldtext=<SNR>29_MyNewFoldText()
+setlocal formatexpr=
+setlocal formatoptions=lnqrowcb
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=0
+setlocal include=\\(require\\|include\\)\\(_once\\)\\?
+setlocal includeexpr=RailsIncludeexpr()
+setlocal indentexpr=GetPhpIndent()
+setlocal indentkeys=0{,0},0),:,!^F,o,O,e,*<Return>,=?>,=<?,=*/
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255,$
+setlocal keywordprg=
+setlocal nolinebreak
+setlocal nolisp
+setlocal nolist
+setlocal makeprg=rake
+setlocal matchpairs=(:),{:},[:],<:>
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=phpcomplete#CompletePHP
+setlocal path=.,~/s3,~/s3/app/controllers,~/s3/app,~/s3/app/models,~/s3/app/helpers,~/s3/components,~/s3/config,~/s3/lib,~/s3/vendor,~/s3/vendor/plugins/*/lib,~/s3/test/unit,~/s3/test/functional,~/s3/test/integration,~/s3/app/apis,~/s3/app/services,~/s3/test,/vendor/plugins/*/test,~/s3/vendor/rails/*/lib,~/s3/vendor/rails/*/test,
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal noscrollbind
+setlocal shiftwidth=2
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=0
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=.rb,.rhtml,.rxml,.rjs,.mab,.liquid,.css,.js,.yml,.csv,.rake,.sql,.html
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'php'
+setlocal syntax=php
+endif
+setlocal tabstop=2
+setlocal tags=./tags,tags,~/s3/tags
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 28 - ((27 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+28
+normal! 0
 tabedit lib/carrime.rb
 set splitbelow splitright
 set nosplitbelow
@@ -360,22 +681,48 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 3 - ((2 * winheight(0) + 23) / 46)
+let s:l = 13 - ((12 * winheight(0) + 23) / 46)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
-normal! 038l
-tabedit ~/programming/ruby/isgd/isgd.rb
+13
+normal! 04l
+tabedit ~/s3/app/models/ftper.rb
 set splitbelow splitright
+wincmd _ | wincmd |
+split
+1wincmd k
+wincmd w
 set nosplitbelow
 set nosplitright
 wincmd t
 set winheight=1 winwidth=1
+exe '1resize ' . ((&lines * 22 + 24) / 48)
+exe '2resize ' . ((&lines * 22 + 24) / 48)
 argglobal
-edit ~/programming/ruby/isgd/isgd.rb
+2argu
+edit ~/s3/app/models/ftper.rb
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
+map <buffer> \rm :Rake
+map <buffer> \rr :R
+map <buffer> \ra :A
+map <buffer> \rf <Plug>RailsFind
+nmap <buffer> ]f <Plug>RailsRelated
+nmap <buffer> gf <Plug>RailsFind
+map <buffer> <silent> <Plug>RailsMagicM :echoerr "Obsolete: Use <Plug>RailsRelated instead"
+map <buffer> <silent> <Plug>RailsTabFind :RTfind
+map <buffer> <silent> <Plug>RailsVSplitFind :RVfind
+map <buffer> <silent> <Plug>RailsSplitFind :RSfind
+map <buffer> <silent> <Plug>RailsFind :REfind
+map <buffer> <silent> <Plug>RailsRelated :R
+map <buffer> <silent> <Plug>RailsAlternate :A
 inoremap <buffer> 	 =CodeComplete()=SwitchRegion()
 imap <buffer>  =RubyEndToken()
+let &cpo=s:cpo_save
+unlet s:cpo_save
 setlocal autoindent
 setlocal nobinary
 setlocal bufhidden=
@@ -392,7 +739,7 @@ setlocal completefunc=<SNR>28_RCT_completion
 setlocal nocopyindent
 setlocal nocursorcolumn
 setlocal nocursorline
-setlocal define=^\\s*#\\s*define
+setlocal define=^\\s*def\\s\\+\\(self\\.\\)\\=
 setlocal dictionary=
 setlocal nodiff
 setlocal equalprg=
@@ -420,7 +767,7 @@ setlocal grepprg=
 setlocal iminsert=0
 setlocal imsearch=0
 setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
-setlocal includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.rb','')
+setlocal includeexpr=RailsIncludeexpr()
 setlocal indentexpr=GetRubyIndent()
 setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
 setlocal noinfercase
@@ -429,7 +776,7 @@ setlocal keywordprg=ri
 setlocal nolinebreak
 setlocal nolisp
 setlocal nolist
-setlocal makeprg=
+setlocal makeprg=rake
 setlocal matchpairs=(:),{:},[:]
 setlocal modeline
 setlocal modifiable
@@ -437,7 +784,7 @@ setlocal nrformats=octal,hex
 setlocal nonumber
 setlocal numberwidth=4
 setlocal omnifunc=rubycomplete#Complete
-setlocal path=.,/usr/local/lib/ruby/site_ruby/1.8,/usr/local/lib/ruby/site_ruby/1.8/i686-darwin9.5.0,/usr/local/lib/ruby/site_ruby,/usr/local/lib/ruby/1.8,/usr/local/lib/ruby/1.8/i686-darwin9.5.0,,/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2/lib,/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2/test,/usr/local/lib/ruby/gems/1.8/gems/RedCloth-4.0.3/lib,/usr/local/lib/ruby/gems/1.8/gems/RedCloth-4.0.3/lib/case_sensitive_require,/usr/local/lib/ruby/gems/1.8/gems/RubyInline-3.8.1/lib,/usr/local/lib/ruby/gems/1.8/gems/ZenTest-3.10.0/lib,/usr/local/lib/ruby/gems/1.8/gems/abstract-1.0.0/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-1.3.3/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-2.0.2/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-2.1.0/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-2.2.2/lib,/usr/local/lib/ruby/gems/1.8/gems/actionpack-1.13.3/lib,/usr/local/lib/ruby/gems/1.8/gems/actionpack-2.0.2/lib,/usr/local/lib/ruby/gems/1.8/gems/actionpack-2.1.0/lib,/usr/local/lib/ruby/gems/1.8/gems/actionpack-2.
+setlocal path=.,~/s3,~/s3/app/controllers,~/s3/app,~/s3/app/models,~/s3/app/helpers,~/s3/components,~/s3/config,~/s3/lib,~/s3/vendor,~/s3/vendor/plugins/*/lib,~/s3/test/unit,~/s3/test/functional,~/s3/test/integration,~/s3/app/apis,~/s3/app/services,~/s3/test,/vendor/plugins/*/test,~/s3/vendor/rails/*/lib,~/s3/vendor/rails/*/test,/usr/local/lib/ruby/site_ruby/1.8,/usr/local/lib/ruby/site_ruby/1.8/i686-darwin9.5.0,/usr/local/lib/ruby/site_ruby,/usr/local/lib/ruby/1.8,/usr/local/lib/ruby/1.8/i686-darwin9.5.0,,/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2/lib,/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2/test,/usr/local/lib/ruby/gems/1.8/gems/RedCloth-4.0.3/lib,/usr/local/lib/ruby/gems/1.8/gems/RedCloth-4.0.3/lib/case_sensitive_require,/usr/local/lib/ruby/gems/1.8/gems/RubyInline-3.8.1/lib,/usr/local/lib/ruby/gems/1.8/gems/ZenTest-3.10.0/lib,/usr/local/lib/ruby/gems/1.8/gems/abstract-1.0.0/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-1.3.3/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-2.0.2/lib,/usr/local/l
 setlocal nopreserveindent
 setlocal nopreviewwindow
 setlocal quoteescape=\\
@@ -446,38 +793,33 @@ setlocal noscrollbind
 setlocal shiftwidth=2
 setlocal noshortname
 setlocal nosmartindent
-setlocal softtabstop=0
+setlocal softtabstop=2
 setlocal nospell
 setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
 setlocal spellfile=
 setlocal spelllang=en
 setlocal statusline=
-setlocal suffixesadd=.rb
+setlocal suffixesadd=.rb,.rhtml,.rxml,.rjs,.mab,.liquid,.yml,.csv,.rake,s.rb
 setlocal swapfile
 setlocal synmaxcol=3000
 if &syntax != 'ruby'
 setlocal syntax=ruby
 endif
 setlocal tabstop=2
-setlocal tags=
+setlocal tags=./tags,tags,~/s3/tags
 setlocal textwidth=0
 setlocal thesaurus=
 setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 2 - ((1 * winheight(0) + 23) / 46)
+let s:l = 11 - ((10 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-2
+11
 normal! 0
-tabedit lib/carrime/tracking_number.rb
-set splitbelow splitright
-set nosplitbelow
-set nosplitright
-wincmd t
-set winheight=1 winwidth=1
+wincmd w
 argglobal
 2argu
 inoremap <buffer> 	 =CodeComplete()=SwitchRegion()
@@ -572,13 +914,141 @@ setlocal nowinfixheight
 setlocal nowinfixwidth
 setlocal wrap
 setlocal wrapmargin=0
-let s:l = 3 - ((2 * winheight(0) + 23) / 46)
+let s:l = 8 - ((7 * winheight(0) + 11) / 22)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-3
+8
+normal! 06l
+wincmd w
+exe '1resize ' . ((&lines * 22 + 24) / 48)
+exe '2resize ' . ((&lines * 22 + 24) / 48)
+tabedit ~/s3/app/models/channel/ftp_submitter.rb
+set splitbelow splitright
+set nosplitbelow
+set nosplitright
+wincmd t
+set winheight=1 winwidth=1
+argglobal
+edit ~/s3/app/models/channel/ftp_submitter.rb
+let s:cpo_save=&cpo
+set cpo&vim
+nmap <buffer> gf <Plug>RailsTabFind
+nmap <buffer> f <Plug>RailsSplitFind
+map <buffer> \rm :Rake
+map <buffer> \rr :R
+map <buffer> \ra :A
+map <buffer> \rf <Plug>RailsFind
+nmap <buffer> ]f <Plug>RailsRelated
+nmap <buffer> gf <Plug>RailsFind
+map <buffer> <silent> <Plug>RailsMagicM :echoerr "Obsolete: Use <Plug>RailsRelated instead"
+map <buffer> <silent> <Plug>RailsTabFind :RTfind
+map <buffer> <silent> <Plug>RailsVSplitFind :RVfind
+map <buffer> <silent> <Plug>RailsSplitFind :RSfind
+map <buffer> <silent> <Plug>RailsFind :REfind
+map <buffer> <silent> <Plug>RailsRelated :R
+map <buffer> <silent> <Plug>RailsAlternate :A
+inoremap <buffer> 	 =CodeComplete()=SwitchRegion()
+imap <buffer>  =RubyEndToken()
+let &cpo=s:cpo_save
+unlet s:cpo_save
+setlocal autoindent
+setlocal nobinary
+setlocal bufhidden=
+setlocal buflisted
+setlocal buftype=
+setlocal nocindent
+setlocal cinkeys=0{,0},0),:,0#,!^F,o,O,e
+setlocal cinoptions=
+setlocal cinwords=if,else,while,do,for,switch
+setlocal comments=:#
+setlocal commentstring=#\ %s
+setlocal complete=.,w,b,u,t,i
+setlocal completefunc=<SNR>28_RCT_completion
+setlocal nocopyindent
+setlocal nocursorcolumn
+setlocal nocursorline
+setlocal define=^\\s*def\\s\\+\\(self\\.\\)\\=
+setlocal dictionary=
+setlocal nodiff
+setlocal equalprg=
+setlocal errorformat=
+setlocal expandtab
+if &filetype != 'ruby'
+setlocal filetype=ruby
+endif
+setlocal foldcolumn=0
+setlocal foldenable
+setlocal foldexpr=0
+setlocal foldignore=#
+setlocal foldlevel=0
+setlocal foldmarker={{{,}}}
+set foldmethod=marker
+setlocal foldmethod=marker
+setlocal foldminlines=1
+setlocal foldnestmax=20
+set foldtext=<SNR>29_MyNewFoldText()
+setlocal foldtext=<SNR>29_MyNewFoldText()
+setlocal formatexpr=
+setlocal formatoptions=tcqln
+setlocal formatlistpat=^\\s*\\d\\+[\\]:.)}\\t\ ]\\s*
+setlocal grepprg=
+setlocal iminsert=0
+setlocal imsearch=0
+setlocal include=^\\s*\\<\\(load\\|w*require\\)\\>
+setlocal includeexpr=RailsIncludeexpr()
+setlocal indentexpr=GetRubyIndent()
+setlocal indentkeys=0{,0},0),0],!^F,o,O,e,=end,=elsif,=when,=ensure,=rescue,==begin,==end
+setlocal noinfercase
+setlocal iskeyword=@,48-57,_,192-255
+setlocal keywordprg=ri
+setlocal nolinebreak
+setlocal nolisp
+setlocal nolist
+setlocal makeprg=rake
+setlocal matchpairs=(:),{:},[:]
+setlocal modeline
+setlocal modifiable
+setlocal nrformats=octal,hex
+setlocal nonumber
+setlocal numberwidth=4
+setlocal omnifunc=rubycomplete#Complete
+setlocal path=.,~/s3,~/s3/app/controllers,~/s3/app,~/s3/app/models,~/s3/app/helpers,~/s3/components,~/s3/config,~/s3/lib,~/s3/vendor,~/s3/vendor/plugins/*/lib,~/s3/test/unit,~/s3/test/functional,~/s3/test/integration,~/s3/app/apis,~/s3/app/services,~/s3/test,/vendor/plugins/*/test,~/s3/vendor/rails/*/lib,~/s3/vendor/rails/*/test,/usr/local/lib/ruby/site_ruby/1.8,/usr/local/lib/ruby/site_ruby/1.8/i686-darwin9.5.0,/usr/local/lib/ruby/site_ruby,/usr/local/lib/ruby/1.8,/usr/local/lib/ruby/1.8/i686-darwin9.5.0,,/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2/lib,/usr/local/lib/ruby/gems/1.8/gems/ParseTree-3.0.2/test,/usr/local/lib/ruby/gems/1.8/gems/RedCloth-4.0.3/lib,/usr/local/lib/ruby/gems/1.8/gems/RedCloth-4.0.3/lib/case_sensitive_require,/usr/local/lib/ruby/gems/1.8/gems/RubyInline-3.8.1/lib,/usr/local/lib/ruby/gems/1.8/gems/ZenTest-3.10.0/lib,/usr/local/lib/ruby/gems/1.8/gems/abstract-1.0.0/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-1.3.3/lib,/usr/local/lib/ruby/gems/1.8/gems/actionmailer-2.0.2/lib,/usr/local/l
+setlocal nopreserveindent
+setlocal nopreviewwindow
+setlocal quoteescape=\\
+setlocal noreadonly
+setlocal noscrollbind
+setlocal shiftwidth=2
+setlocal noshortname
+setlocal nosmartindent
+setlocal softtabstop=2
+setlocal nospell
+setlocal spellcapcheck=[.?!]\\_[\\])'\"\	\ ]\\+
+setlocal spellfile=
+setlocal spelllang=en
+setlocal statusline=
+setlocal suffixesadd=.rb,.rhtml,.rxml,.rjs,.mab,.liquid,.yml,.csv,.rake,s.rb
+setlocal swapfile
+setlocal synmaxcol=3000
+if &syntax != 'ruby'
+setlocal syntax=ruby
+endif
+setlocal tabstop=2
+setlocal tags=./tags,tags,~/s3/tags
+setlocal textwidth=0
+setlocal thesaurus=
+setlocal nowinfixheight
+setlocal nowinfixwidth
+setlocal wrap
+setlocal wrapmargin=0
+let s:l = 1 - ((0 * winheight(0) + 23) / 46)
+if s:l < 1 | let s:l = 1 | endif
+exe s:l
+normal! zt
+1
 normal! 0
-tabnext 1
+tabnext 5
 if exists('s:wipebuf')
   silent exe 'bwipe ' . s:wipebuf
 endif
