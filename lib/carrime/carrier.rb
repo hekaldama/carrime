@@ -51,12 +51,9 @@ module Carrime
       def fedex
         self.new( 
                   :name => "FedEx",
-                  :url  => "http://fedex.com/Tracking?ascend_header=1&clienttype=dotcom&cntry_code=us&language=english&tracknumbers=%s",
+                  :url  => "http://fedex.com/Tracking?ascend_header=1&clienttype=dotcom&cntry_code=us&language=english&tracknumbers=",
                   :phone_number => "1-800-238-5355"
                 )
-      end
-      def fedex
-
       end
 
       def old_dominion
@@ -118,7 +115,7 @@ module Carrime
       def averitt_express
         self.new( 
                   :name => "Averitt Express",
-                  :url  => "http://fedex.com/Tracking?ascend_header=1&clienttype=dotcom&cntry_code=us&language=english&tracknumbers=%s",
+                  :url  => "http://fedex.com/Tracking?ascend_header=1&clienttype=dotcom&cntry_code=us&language=english&tracknumbers=",
                   :phone_number => "1-800-332-0807"
                 )
       end
@@ -158,7 +155,7 @@ module Carrime
       def estes_express
         self.new( 
                   :name => "Estes Express",
-                  :url  => "http://www.estesexpress.com/cgi-dta/edn419.mbr/output?search_type=F&search_criteria=%s&submit=Submit",
+                  :url  => "http://www.estesexpress.com/cgi-dta/edn419.mbr/output?search_type=F&submit=Submit&search_criteria=",
                   :phone_number => "1-877-268-4555"
                 )
       end
@@ -189,7 +186,7 @@ module Carrime
       def abf_freight_systems
         self.new( 
                   :name => "ABF Freight systems",
-                  :url  => "https://www.abfs.com/tools/trace/default.asp?hidSubmitted=Y&refno0=%s&reftype0=A",
+                  :url  => "https://www.abfs.com/tools/trace/default.asp?hidSubmitted=Y&reftype0=A&refno0=",
                   :phone_number => "1-800-610-5544"
                 )
       end
