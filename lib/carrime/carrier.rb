@@ -2,7 +2,7 @@ module Carrime
   class Carrier
     attr_reader :name
     attr_reader :url
-    attr_reader :phone
+    attr_reader :phone_number
 
     @@carrier_to_valid_tracking_number = {
       "fedex"                      => /^(961301|732|365|JKT|03722|01086|14232|216423|360670|005417|420629|712|944|865)/,
@@ -25,7 +25,7 @@ module Carrime
       "abf_freight_systems"        => /^(0125|0508)/,
       "vitran_express"             => /^(003)/,
       "dayton_freight"             => /^(00128)/,
-      "roadrunner_dawes"           => /^(129155)/,
+      "roadrunner_dawes"           => /^(129155|145)/,
       "roadway"                    => /^(931|435)/
     }
 
